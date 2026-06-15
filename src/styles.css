@@ -2,7 +2,7 @@
   color-scheme: light;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #eef3f0;
+  background: #f2f4f1;
   color: #20211f;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,8 +18,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    linear-gradient(90deg, rgba(36, 86, 83, 0.08) 0 1px, transparent 1px) 0 0 / 28px 28px,
-    #eef3f0;
+    radial-gradient(circle at top left, rgba(36, 86, 83, 0.1), transparent 34rem),
+    linear-gradient(180deg, #f7f8f5 0%, #edf2ef 58%, #f5f6f2 100%);
 }
 
 button,
@@ -45,7 +45,7 @@ img {
 .shell {
   width: min(1480px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 28px 0 40px;
+  padding: 26px 0 44px;
 }
 
 .topbar {
@@ -53,7 +53,8 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 10px 0 22px;
+  padding: 14px 16px 22px;
+  border-bottom: 1px solid rgba(36, 86, 83, 0.14);
 }
 
 .eyebrow {
@@ -73,8 +74,8 @@ h2 {
 }
 
 h1 {
-  font-size: 3.8rem;
-  line-height: 0.95;
+  font-size: 3.25rem;
+  line-height: 1;
 }
 
 h2 {
@@ -89,12 +90,14 @@ h2 {
   justify-content: center;
   min-width: 40px;
   height: 40px;
-  border: 1px solid #bdcac5;
+  border: 1px solid #b8c7c1;
   border-radius: 8px;
   background: #ffffff;
   color: #20211f;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
   transition:
     border-color 160ms ease,
+    box-shadow 160ms ease,
     transform 160ms ease,
     background 160ms ease;
 }
@@ -103,6 +106,7 @@ h2 {
 .clear-button:hover {
   border-color: #245653;
   background: #f3f7f5;
+  box-shadow: 0 8px 20px rgba(32, 33, 31, 0.08);
 }
 
 .icon-button:active,
@@ -114,23 +118,30 @@ h2 {
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 12px;
+  margin: 18px 0 16px;
 }
 
 .metric {
   min-height: 86px;
-  padding: 14px;
-  border: 1px solid #d5ded9;
+  padding: 15px;
+  border: 1px solid rgba(36, 86, 83, 0.14);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 14px 34px rgba(32, 33, 31, 0.05);
 }
 
 .metric span {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 7px;
   color: #66716d;
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.metric span svg {
+  color: #245653;
 }
 
 .metric strong {
@@ -147,7 +158,7 @@ h2 {
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 390px;
-  gap: 14px;
+  gap: 16px;
   align-items: start;
 }
 
@@ -161,10 +172,11 @@ h2 {
   grid-template-columns: minmax(220px, 1.1fr) minmax(150px, 0.7fr) minmax(180px, 0.85fr) minmax(180px, 0.85fr) auto;
   gap: 10px;
   align-items: end;
-  padding: 14px;
-  border: 1px solid #d5ded9;
+  padding: 15px;
+  border: 1px solid rgba(36, 86, 83, 0.14);
   border-radius: 8px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14px 34px rgba(32, 33, 31, 0.05);
 }
 
 .field {
@@ -186,7 +198,7 @@ h2 {
   width: 100%;
   height: 42px;
   padding: 0 10px;
-  border: 1px solid #bdcac5;
+  border: 1px solid #b8c7c1;
   border-radius: 8px;
   background: #f7f9f8;
   color: #66716d;
@@ -197,7 +209,7 @@ select {
   width: 100%;
   height: 42px;
   min-width: 0;
-  border: 1px solid #bdcac5;
+  border: 1px solid #b8c7c1;
   border-radius: 8px;
   background: #f7f9f8;
   color: #20211f;
@@ -239,15 +251,16 @@ select:focus,
   align-items: end;
   justify-content: space-between;
   gap: 12px;
-  margin: 22px 0 12px;
+  margin: 24px 0 12px;
 }
 
 .api-pill {
   overflow: hidden;
   max-width: 48%;
   padding: 7px 9px;
-  border: 1px solid #d5ded9;
+  border: 1px solid rgba(36, 86, 83, 0.14);
   border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
   color: #66716d;
   font-size: 0.76rem;
   text-overflow: ellipsis;
@@ -257,18 +270,19 @@ select:focus,
 .capture-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
 }
 
 .capture-card {
   min-width: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid #d5ded9;
+  border: 1px solid rgba(36, 86, 83, 0.14);
   border-radius: 8px;
   background: #ffffff;
   color: inherit;
   text-align: left;
+  box-shadow: 0 12px 30px rgba(32, 33, 31, 0.045);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
@@ -278,21 +292,34 @@ select:focus,
 .capture-card:hover,
 .capture-card.selected {
   border-color: #245653;
-  box-shadow: 0 10px 28px rgba(32, 33, 31, 0.08);
+  box-shadow: 0 16px 34px rgba(32, 33, 31, 0.11);
+}
+
+.capture-card.selected {
+  outline: 3px solid rgba(36, 86, 83, 0.12);
 }
 
 .thumb {
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #dce5df;
+  background:
+    linear-gradient(135deg, rgba(36, 86, 83, 0.1), rgba(156, 47, 33, 0.08)),
+    #dce5df;
 }
 
 .thumb img,
 .details-image img {
   width: 100%;
   height: 100%;
+}
+
+.thumb img {
   object-fit: cover;
+}
+
+.details-image img {
+  object-fit: contain;
 }
 
 .motion-badge {
@@ -312,7 +339,7 @@ select:focus,
   align-items: start;
   justify-content: space-between;
   gap: 12px;
-  padding: 11px;
+  padding: 12px;
 }
 
 .capture-card-body strong,
@@ -356,14 +383,19 @@ select:focus,
   position: sticky;
   top: 16px;
   overflow: hidden;
-  border: 1px solid #d5ded9;
+  border: 1px solid rgba(36, 86, 83, 0.14);
   border-radius: 8px;
   background: #ffffff;
+  box-shadow: 0 18px 42px rgba(32, 33, 31, 0.08);
 }
 
 .details-image {
-  aspect-ratio: 1 / 1;
-  background: #dce5df;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background:
+    linear-gradient(135deg, rgba(36, 86, 83, 0.09), rgba(156, 47, 33, 0.07)),
+    #dce5df;
 }
 
 .details-header {
@@ -371,7 +403,7 @@ select:focus,
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px;
+  padding: 15px;
   border-bottom: 1px solid #e3ebe7;
 }
 
@@ -379,14 +411,14 @@ select:focus,
   display: grid;
   gap: 1px;
   margin: 0;
-  background: #e3ebe7;
+  background: #e0e8e4;
 }
 
 .detail-item {
   display: grid;
   grid-template-columns: minmax(110px, 0.7fr) minmax(0, 1fr);
   gap: 12px;
-  padding: 11px 14px;
+  padding: 12px 15px;
   background: #ffffff;
 }
 
@@ -421,7 +453,7 @@ select:focus,
 }
 
 .state-block {
-  border: 1px dashed #bdcac5;
+  border: 1px dashed #b8c7c1;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.62);
 }

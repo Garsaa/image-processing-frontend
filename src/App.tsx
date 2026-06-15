@@ -3,6 +3,7 @@ import {
   Camera,
   ChevronLeft,
   ChevronRight,
+  CheckCircle2,
   Clock3,
   ExternalLink,
   Filter,
@@ -10,6 +11,7 @@ import {
   Loader2,
   RefreshCcw,
   Search,
+  ShieldAlert,
   X
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -23,6 +25,9 @@ const initialFilters: CaptureFilters = {
   page: 1,
   pageSize: 12
 };
+
+const imageFallbackUrl =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23dce5df'/%3E%3Cpath d='M260 392l92-108 65 76 44-52 79 84H260z' fill='%2395a7a0'/%3E%3Ccircle cx='515' cy='215' r='34' fill='%2395a7a0'/%3E%3Crect x='206' y='154' width='388' height='292' rx='26' fill='none' stroke='%2395a7a0' stroke-width='18'/%3E%3C/svg%3E";
 
 export function App() {
   const [filters, setFilters] = useState<CaptureFilters>(initialFilters);
@@ -114,10 +119,10 @@ export function App() {
       </header>
 
       <section className="summary-grid" aria-label="Resumo das capturas">
-        <Metric label="Capturas" value={formatNumber(total)} />
-        <Metric label="Nesta pagina" value={formatNumber(captures.length)} />
-        <Metric label="Com movimento" value={formatNumber(visibleMotionCount)} tone="alert" />
-        <Metric label="Ultima captura" value={latestCapture ? formatTime(latestCapture.capturedAt) : "-"} />
+        <Metric icon={<Camera size={18} />} label="Capturas" value={formatNumber(total)} />
+        <Metric icon={<Filter size={18} />} label="Nesta pagina" value={formatNumber(captures.length)} />
+        <Metric icon={<ShieldAlert size={18} />} label="Com movimento" value={formatNumber(visibleMotionCount)} tone="alert" />
+        <Metric icon={<Clock3 size={18} />} label="Ultima captura" value={latestCapture ? formatTime(latestCapture.capturedAt) : "-"} />
       </section>
 
       <section className="workspace">
@@ -247,10 +252,23 @@ export function App() {
   );
 }
 
-function Metric({ label, value, tone }: { label: string; value: string; tone?: "alert" }) {
+function Metric({
+  icon,
+  label,
+  value,
+  tone
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  tone?: "alert";
+}) {
   return (
     <article className={`metric ${tone === "alert" ? "metric-alert" : ""}`}>
-      <span>{label}</span>
+      <span>
+        {icon}
+        {label}
+      </span>
       <strong>{value}</strong>
     </article>
   );
@@ -265,10 +283,19 @@ function CaptureCard({
   selected: boolean;
   onSelect: () => void;
 }) {
+  const imageUrl = getDisplayImageUrl(capture, 640);
+
   return (
     <button className={`capture-card ${selected ? "selected" : ""}`} type="button" onClick={onSelect}>
       <div className="thumb">
-        <img src={capture.imageUrl} alt={`Captura de ${capture.deviceId}`} loading="lazy" />
+        <img
+          src={imageUrl}
+          alt={`Captura de ${capture.deviceId}`}
+          loading="lazy"
+          onError={(event) => {
+            event.currentTarget.src = imageFallbackUrl;
+          }}
+        />
         {capture.motionDetected ? <span className="motion-badge">Movimento</span> : null}
       </div>
       <div className="capture-card-body">
@@ -292,10 +319,18 @@ function CaptureDetails({ capture }: { capture: Capture | null }) {
     );
   }
 
+  const imageUrl = getDisplayImageUrl(capture, 1200);
+
   return (
     <aside className="details-panel">
       <div className="details-image">
-        <img src={capture.imageUrl} alt={`Captura selecionada de ${capture.deviceId}`} />
+        <img
+          src={imageUrl}
+          alt={`Captura selecionada de ${capture.deviceId}`}
+          onError={(event) => {
+            event.currentTarget.src = imageFallbackUrl;
+          }}
+        />
       </div>
 
       <div className="details-header">
@@ -311,6 +346,7 @@ function CaptureDetails({ capture }: { capture: Capture | null }) {
       <dl className="detail-list">
         <DetailItem icon={<Clock3 size={16} />} label="Capturada em" value={formatDateTime(capture.capturedAt)} />
         <DetailItem icon={<Camera size={16} />} label="Origem" value={capture.captureSource || "-"} />
+        <DetailItem icon={<CheckCircle2 size={16} />} label="Render" value={imageUrl === capture.imageUrl ? "Original" : "Drive preview"} />
         <DetailItem label="Tamanho" value={formatBytes(capture.sizeBytes)} />
         <DetailItem label="Diff score" value={capture.diffScore.toFixed(2)} />
         <DetailItem label="Movimento" value={capture.motionDetected ? "Detectado" : "Nao"} />
@@ -397,4 +433,33 @@ function formatBytes(value: number): string {
 
 function formatNumber(value: number): string {
   return new Intl.NumberFormat("pt-BR").format(value);
+}
+
+function getDisplayImageUrl(capture: Capture, width: number): string {
+  const driveFileId = getGoogleDriveFileId(capture);
+
+  if (!driveFileId) {
+    return capture.imageUrl;
+  }
+
+  return `https://lh3.googleusercontent.com/d/${driveFileId}=w${width}`;
+}
+
+function getGoogleDriveFileId(capture: Capture): string | null {
+  if (capture.imagePath?.startsWith("google-drive:")) {
+    return capture.imagePath.replace("google-drive:", "");
+  }
+
+  try {
+    const url = new URL(capture.imageUrl);
+    const id = url.searchParams.get("id");
+
+    if (id) {
+      return id;
+    }
+
+    return url.pathname.match(/\/d\/([^/]+)/)?.[1] ?? null;
+  } catch {
+    return null;
+  }
 }
